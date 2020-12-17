@@ -58,6 +58,14 @@ The `pageInfo` field [is specified by the Relay cursor connections specification
 
 As many schemas will have a nonzero number of exceptions to this rule, fields can be marked with an `@allowNonNull` decorator (which you must add to your schema) to skip this rule as well. Standard [`graphql-schema-linter` overrides](https://github.com/cjoudrey/graphql-schema-linter#inline-rule-overrides) will work as well.
 
+### `nodes-contain-entity-id`
+
+When a type implements the `Node` interface, it must contain a non-nullable string named `entityId`.
+
+#### Rationale
+
+For cross-compatibility with other APIs, our model types need to expose the primary identifier that can be used to identify the object across services. We do not, however, want to use `Node`'s `id` field for this identifier, as clients expect `id` to be globally unique across model and type (which our primary identifier is not). By enforcing the presence of `entityId`, we ensure there is a field to expose both, without changing the standard `Node` interface and still allowing for exceptional cases.
+
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md).
