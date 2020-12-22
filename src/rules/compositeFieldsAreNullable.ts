@@ -16,7 +16,6 @@ import {
   unwrapAstNode,
 } from '../utils';
 
-
 function isAllowedNonNullCompositeField(
   node: FieldDefinitionNode,
   type: GraphQLCompositeType,
@@ -40,9 +39,14 @@ export function CompositeFieldsAreNullable(
         const { type: nonNullType } = nodeType;
         if (isNamedTypeNode(nonNullType)) {
           const type = typeFromAST(context.getSchema(), nonNullType);
-          if (isGraphQLCompositeType(type) && !isAllowedNonNullCompositeField(node, type)) {
+          if (
+            isGraphQLCompositeType(type) &&
+            !isAllowedNonNullCompositeField(node, type)
+          ) {
             const lastAncestor = ancestors[ancestors.length - 1];
-            const parentNode = lastAncestor ? unwrapAstNode(lastAncestor) : null;
+            const parentNode = lastAncestor
+              ? unwrapAstNode(lastAncestor)
+              : null;
             const parentName = parentNode ? getNodeName(parentNode) : 'root';
             context.reportError(
               new ValidationError(
