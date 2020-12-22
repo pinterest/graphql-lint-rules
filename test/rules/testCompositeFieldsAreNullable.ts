@@ -2,10 +2,7 @@ import { CompositeFieldsAreNullable } from '../../src/rules/compositeFieldsAreNu
 
 import { gql } from '../utils';
 
-import {
-  expectPassesRule,
-  expectFailsRule,
-} from '../assertions';
+import { expectPassesRule, expectFailsRule } from '../assertions';
 
 describe('CompositeFieldsAreNullable rule', () => {
   it('allows objects that have a nullable composite field', () => {
@@ -35,7 +32,8 @@ describe('CompositeFieldsAreNullable rule', () => {
       `,
       [
         {
-          message: 'The field `HasNonNullComposite.field` uses a composite type and should be nullable.',
+          message:
+            'The field `HasNonNullComposite.field` uses a composite type and should be nullable.',
           locations: [{ line: 6, column: 11 }],
         },
       ],

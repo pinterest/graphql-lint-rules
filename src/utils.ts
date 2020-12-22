@@ -10,9 +10,7 @@ import {
   TypeNode,
 } from 'graphql';
 
-export {
-  ValidationError,
-} from 'graphql-schema-linter/lib/validation_error';
+export { ValidationError } from 'graphql-schema-linter/lib/validation_error';
 
 const assertNever = (_x: never, message = 'Unrecognized type'): never => {
   throw new Error(message);
@@ -20,19 +18,21 @@ const assertNever = (_x: never, message = 'Unrecognized type'): never => {
 
 const isAllowedByDirective = (
   node: {
-    directives?: readonly DirectiveNode[],
+    directives?: readonly DirectiveNode[];
   },
   directiveName: string,
 ): boolean => {
-  return !!node.directives && node.directives.some((directive) => {
-    return directive.name.value === directiveName;
-  });
+  return (
+    !!node.directives &&
+    node.directives.some((directive) => {
+      return directive.name.value === directiveName;
+    })
+  );
 };
 
 const isNonNullTypeNode = (typeNode: TypeNode): typeNode is NonNullTypeNode => {
   return typeNode.kind === 'NonNullType';
 };
-
 
 const typeNodeKinds = new Set(['NamedType', 'ListType', 'NonNullType']);
 const isTypeNode = (node: ASTNode): node is TypeNode => {
@@ -43,17 +43,25 @@ const isNamedTypeNode = (node: ASTNode): node is NamedTypeNode => {
   return isTypeNode(node) && node.kind === 'NamedType';
 };
 
-const isNamedNode = (node: ASTNode): node is NamedTypeNode | TypeDefinitionNode | ObjectFieldNode => {
+const isNamedNode = (
+  node: ASTNode,
+): node is NamedTypeNode | TypeDefinitionNode | ObjectFieldNode => {
   return node.hasOwnProperty('name');
-}
+};
 
-const isGraphQLCompositeType = (type?: GraphQLType): type is GraphQLCompositeType => {
-  const objectType = (type as GraphQLCompositeType);
-  return !!type && !!objectType.astNode && [
-    'ObjectTypeDefinition',
-    'InterfaceTypeDefinition',
-    'UnionTypeDefinition',
-  ].includes(objectType.astNode.kind);
+const isGraphQLCompositeType = (
+  type?: GraphQLType,
+): type is GraphQLCompositeType => {
+  const objectType = type as GraphQLCompositeType;
+  return (
+    !!type &&
+    !!objectType.astNode &&
+    [
+      'ObjectTypeDefinition',
+      'InterfaceTypeDefinition',
+      'UnionTypeDefinition',
+    ].includes(objectType.astNode.kind)
+  );
 };
 
 const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
@@ -68,7 +76,9 @@ const unwrapType = (typeNode: TypeNode): NamedTypeNode => {
   }
 };
 
-const unwrapAstNode = (node: ASTNode | readonly ASTNode[]): ASTNode | undefined => {
+const unwrapAstNode = (
+  node: ASTNode | readonly ASTNode[],
+): ASTNode | undefined => {
   return Array.isArray(node) ? node[0] : node;
 };
 
