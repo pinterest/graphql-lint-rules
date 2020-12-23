@@ -1,0 +1,16 @@
+# For enforcing standards that are not as crucial as CI checks
+
+name: Conventions
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  conventional_commits:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run Commitsar
+      uses: docker://aevea/commitsar
