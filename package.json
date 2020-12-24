@@ -3,6 +3,8 @@
   "version": "0.2.0",
   "description": "Pinterest lint rules for use with graphql-schema-linter",
   "license": "Apache-2.0",
+  "repository": "github:pinterest/graphql-lint-rules",
+  "bugs": "https://github.com/pinterest/graphql-lint-rules/issues",
   "scripts": {
     "build": "rollup -c",
     "format": "eslint '*/**/*.{js,ts}' --quiet --fix",
@@ -32,6 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^4.11.0",
     "@typescript-eslint/parser": "^4.11.0",
     "assert": "^2.0.0",
+    "conventional-changelog-conventionalcommits": "^4.5.0",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.0",
@@ -41,6 +44,7 @@
     "prettier": "^2.2.1",
     "rollup": "^2.34.2",
     "rollup-plugin-multi-input": "^1.1.1",
+    "semantic-release": "^17.3.0",
     "ts-node": "^9.1.1",
     "tslib": "^2.0.3",
     "typescript": "^4.1.2"

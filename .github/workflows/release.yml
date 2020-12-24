@@ -1,0 +1,47 @@
+name: Create Release
+
+on:
+  workflow_dispatch
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        npm install
+    - name: Semantic Release
+      id: semantic
+      uses: cycjimmy/semantic-release-action@v2
+      with:
+        semantic_version: 17.3
+    - name: Create Release
+      if: steps.semantic.outputs.new_release_published == 'true'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.semantic.output.new_release_version }}
+        release_name: v${{ steps.semantic.output.new_release_version }}
+        body: ${{ steps.semantic.output.new_release_notes }}
+        draft: false
+        prerelease: ${{ !!steps.semantic.outputs.new_release_channel}} # on everything but the default channel
+    - name: Create tarball
+      if: steps.semantic.outputs.new_release_published == 'true'
+      run: |
+        npm pack
+    - name: Upload Release Asset
+      if: steps.semantic.outputs.new_release_published == 'true'
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./pinterest-graphql-lint-rules-${{ steps.semantic.output.new_release_version }}.tgz
+        asset_name: pinterest-graphql-lint-rules-${{ steps.semantic.output.new_release_version }}.tgz
+        asset_content_type: application/gzip

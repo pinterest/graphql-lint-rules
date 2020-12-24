@@ -46,7 +46,7 @@ To increase the chances that your pull request will be accepted:
 
 - Follow the coding style
 - Write tests for your changes
-- Write a good commit message
+- Write a good commit message. Commit messages must follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ## License
 
