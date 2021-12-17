@@ -17,7 +17,7 @@ jobs:
       id: semantic
       uses: cycjimmy/semantic-release-action@v2
       with:
-        semantic_version: 17.3
+        semantic_version: 18.0.1
     - name: Create Release
       if: steps.semantic.outputs.new_release_published == 'true'
       id: create_release
@@ -25,9 +25,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ steps.semantic.output.new_release_version }}
-        release_name: v${{ steps.semantic.output.new_release_version }}
-        body: ${{ steps.semantic.output.new_release_notes }}
+        tag_name: v${{ steps.semantic.outputs.new_release_version }}
+        release_name: v${{ steps.semantic.outputs.new_release_version }}
+        body: ${{ steps.semantic.outputs.new_release_notes }}
         draft: false
         prerelease: ${{ !!steps.semantic.outputs.new_release_channel}} # on everything but the default channel
     - name: Create tarball
