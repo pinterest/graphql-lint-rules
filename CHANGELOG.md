@@ -2,6 +2,8 @@
 
 Modified `CompositeFieldsAreNullable` to accept a `rulesOptions` list of exceptions.
 
+Added `FieldsCamelCasedOptionalStartingUnderscore` rule.
+
 ### 0.2.0 (2020-12-23)
 
 Added `NodesContainEntityId` rule.
