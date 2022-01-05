@@ -12,6 +12,10 @@ import {
 
 export { ValidationError } from 'graphql-schema-linter/lib/validation_error';
 
+declare type Configuration = typeof import('graphql-schema-linter/lib/configuration');
+
+export { Configuration };
+
 const assertNever = (_x: never, message = 'Unrecognized type'): never => {
   throw new Error(message);
 };

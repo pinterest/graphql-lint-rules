@@ -6,6 +6,10 @@ import { Schema } from 'graphql-schema-linter/lib/schema';
 import { gql } from './utils';
 
 type Rule = (context: ValidationContext) => ASTVisitor;
+type RuleWithConfigurations = (
+  configurations: any,
+  context: ValidationContext,
+) => ASTVisitor;
 type LintError = {
   message: string;
   locations: {
@@ -23,7 +27,7 @@ const DefaultSchema = gql`
 `;
 
 export const expectFailsRule = (
-  rule: Rule,
+  rule: Rule | RuleWithConfigurations,
   schemaSDL: string,
   expectedErrors: LintError[] = [],
   configurationOptions = {},
@@ -37,7 +41,7 @@ export const expectFailsRule = (
 };
 
 export const expectFailsRuleWithConfiguration = (
-  rule: Rule,
+  rule: Rule | RuleWithConfigurations,
   schemaSDL: string,
   configurationOptions: Record<string, unknown>,
   expectedErrors: LintError[] = [],
@@ -60,7 +64,7 @@ export const expectFailsRuleWithConfiguration = (
 };
 
 export const expectPassesRule = (
-  rule: Rule,
+  rule: Rule | RuleWithConfigurations,
   schemaSDL: string,
   configurationOptions = {},
 ): void => {
@@ -68,7 +72,7 @@ export const expectPassesRule = (
 };
 
 export const expectPassesRuleWithConfiguration = (
-  rule: Rule,
+  rule: Rule | RuleWithConfigurations,
   schemaSDL: string,
   configurationOptions = {},
 ): void => {
@@ -83,7 +87,7 @@ export const expectPassesRuleWithConfiguration = (
 };
 
 const validateSchemaWithRule = (
-  rule: Rule,
+  rule: Rule | RuleWithConfigurations,
   schemaSDL: string,
   configurationOptions = {},
 ) => {

@@ -15,6 +15,7 @@ npm install -D @pinterest/graphql-lint-rules
 ```
 
 Or, if you want to use these rules locally across multiple projects, run:
+
 ```
 yarn global add @pinterest/graphql-lint-rules
 ```
@@ -57,6 +58,18 @@ Caleb Meredith has written a [good summary of issues around nullability](https:/
 The `pageInfo` field [is specified by the Relay cursor connections specification as a non-null field](https://relay.dev/graphql/connections.htm#sec-Connection-Types.Fields.PageInfo), and therefore violates this rule. Since it's more important to follow the spec than this rule, fields that use the `PageInfo` type are skipped.
 
 As many schemas will have a nonzero number of exceptions to this rule, fields can be marked with an `@allowNonNull` decorator (which you must add to your schema) to skip this rule as well. Standard [`graphql-schema-linter` overrides](https://github.com/cjoudrey/graphql-schema-linter#inline-rule-overrides) will work as well.
+
+Also, a list of exceptions can be added to the `rulesOptions`, so that entire scenarios can be excluded at once.
+
+```json
+"rulesOptions": [
+  "composite-fields-are-nullable": {
+    "exceptions": [
+      "ErrorInfo",
+    ]
+  },
+]
+```
 
 ### `nodes-contain-entity-id`
 

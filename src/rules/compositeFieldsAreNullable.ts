@@ -7,6 +7,7 @@ import {
 } from 'graphql';
 
 import {
+  Configuration,
   isAllowedByDirective,
   isGraphQLCompositeType,
   isNamedTypeNode,
@@ -19,9 +20,11 @@ import {
 function isAllowedNonNullCompositeField(
   node: FieldDefinitionNode,
   type: GraphQLCompositeType,
+  exceptions: Array<string>,
 ): boolean {
-  // allowlist
-  if (type.name === 'PageInfo') {
+  // exceptions
+  const isException = exceptions.includes(type.name);
+  if (isException === true) {
     return true;
   }
 
@@ -30,18 +33,22 @@ function isAllowedNonNullCompositeField(
 }
 
 export function CompositeFieldsAreNullable(
+  configuration: Configuration,
   context: ValidationContext,
 ): ASTVisitor {
   return {
     FieldDefinition: (node, _key, _parent, _path, ancestors) => {
       const { type: nodeType } = node;
+      const ruleKey = 'composite-fields-are-nullable';
       if (isNonNullTypeNode(nodeType)) {
         const { type: nonNullType } = nodeType;
         if (isNamedTypeNode(nonNullType)) {
           const type = typeFromAST(context.getSchema(), nonNullType);
+          const options = configuration.getRulesOptions()[ruleKey] || {};
+          const exceptions = options.exceptions || [];
           if (
             isGraphQLCompositeType(type) &&
-            !isAllowedNonNullCompositeField(node, type)
+            !isAllowedNonNullCompositeField(node, type, exceptions)
           ) {
             const lastAncestor = ancestors[ancestors.length - 1];
             const parentNode = lastAncestor
@@ -50,7 +57,7 @@ export function CompositeFieldsAreNullable(
             const parentName = parentNode ? getNodeName(parentNode) : 'root';
             context.reportError(
               new ValidationError(
-                'composite-fields-are-nullable',
+                ruleKey,
                 `The field \`${parentName}.${node.name.value}\` uses a composite type and should be nullable.`,
                 [node],
               ),
