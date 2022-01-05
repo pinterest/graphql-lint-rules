@@ -19,19 +19,6 @@
       {
         "preset": "conventionalcommits"
       }
-    ],
-    [
-      "@semantic-release/npm",
-      {
-        "npmPublish": false
-      }
-    ],
-    [
-      "@semantic-release/git",
-      {
-        "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}",
-        "assets": ["rules/**/*.js", "package.json"]
-      }
     ]
   ]
 }
