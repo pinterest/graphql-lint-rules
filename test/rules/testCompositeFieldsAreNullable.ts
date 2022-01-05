@@ -16,6 +16,13 @@ describe('CompositeFieldsAreNullable rule', () => {
           field: ACompositeType
         }
       `,
+      {
+        rulesOptions: {
+          'type-fields-sorted-alphabetically': {
+            sortOrder: 'alphabetical',
+          },
+        },
+      },
     );
   });
 
@@ -37,6 +44,13 @@ describe('CompositeFieldsAreNullable rule', () => {
           locations: [{ line: 6, column: 11 }],
         },
       ],
+      {
+        rulesOptions: {
+          'type-fields-sorted-alphabetically': {
+            sortOrder: 'alphabetical',
+          },
+        },
+      },
     );
   });
 
@@ -62,6 +76,13 @@ describe('CompositeFieldsAreNullable rule', () => {
           hasNextPage: Boolean
         }
       `,
+      {
+        rulesOptions: {
+          'type-fields-sorted-alphabetically': {
+            sortOrder: 'alphabetical',
+          },
+        },
+      },
     );
   });
 
@@ -78,6 +99,34 @@ describe('CompositeFieldsAreNullable rule', () => {
           field: ACompositeType! @allowNonNull
         }
       `,
+      {
+        rulesOptions: {
+          'type-fields-sorted-alphabetically': {
+            sortOrder: 'alphabetical',
+          },
+        },
+      },
+    );
+  });
+
+  it('can be skipped by being added to the exceptions list', () => {
+    expectPassesRule(
+      CompositeFieldsAreNullable,
+      gql`
+        type ACompositeType {
+          field: String
+        }
+        type HasNonNullComposite {
+          field: ACompositeType!
+        }
+      `,
+      {
+        rulesOptions: {
+          'composite-fields-are-nullable': {
+            exceptions: ['ACompositeType'],
+          },
+        },
+      },
     );
   });
 });

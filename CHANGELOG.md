@@ -1,3 +1,7 @@
+### 0.3.0 (2022-01-05)
+
+Modified `CompositeFieldsAreNullable` to accept a `rulesOptions` list of exceptions.
+
 ### 0.2.0 (2020-12-23)
 
 Added `NodesContainEntityId` rule.
