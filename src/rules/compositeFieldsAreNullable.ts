@@ -23,8 +23,7 @@ function isAllowedNonNullCompositeField(
   exceptions: Array<string>,
 ): boolean {
   // exceptions
-  const isException = exceptions.includes(type.name);
-  if (isException === true) {
+  if (exceptions.includes(type.name)) {
     return true;
   }
 

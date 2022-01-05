@@ -1,6 +1,7 @@
 ### 0.3.0 (2022-01-05)
 
 Modified `CompositeFieldsAreNullable` to accept a `rulesOptions` list of exceptions.
+It no longer assumes that the schema follows Relays' spec, so PageInfo was removed from the default behaviour of the rule and must be added as an exception if needed.
 
 Added `FieldsCamelCasedOptionalStartingUnderscore` rule.
 

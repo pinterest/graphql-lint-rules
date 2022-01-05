@@ -16,13 +16,6 @@ describe('CompositeFieldsAreNullable rule', () => {
           field: ACompositeType
         }
       `,
-      {
-        rulesOptions: {
-          'type-fields-sorted-alphabetically': {
-            sortOrder: 'alphabetical',
-          },
-        },
-      },
     );
   });
 
@@ -44,13 +37,6 @@ describe('CompositeFieldsAreNullable rule', () => {
           locations: [{ line: 6, column: 11 }],
         },
       ],
-      {
-        rulesOptions: {
-          'type-fields-sorted-alphabetically': {
-            sortOrder: 'alphabetical',
-          },
-        },
-      },
     );
   });
 
@@ -62,27 +48,6 @@ describe('CompositeFieldsAreNullable rule', () => {
           field: String!
         }
       `,
-    );
-  });
-
-  it('ignores Relay violations', () => {
-    expectPassesRule(
-      CompositeFieldsAreNullable,
-      gql`
-        type MyRelayConnection {
-          pageInfo: PageInfo
-        }
-        type PageInfo {
-          hasNextPage: Boolean
-        }
-      `,
-      {
-        rulesOptions: {
-          'type-fields-sorted-alphabetically': {
-            sortOrder: 'alphabetical',
-          },
-        },
-      },
     );
   });
 
@@ -99,13 +64,6 @@ describe('CompositeFieldsAreNullable rule', () => {
           field: ACompositeType! @allowNonNull
         }
       `,
-      {
-        rulesOptions: {
-          'type-fields-sorted-alphabetically': {
-            sortOrder: 'alphabetical',
-          },
-        },
-      },
     );
   });
 
