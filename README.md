@@ -71,6 +71,14 @@ Also, a list of exceptions can be added to the `rulesOptions`, so that entire sc
 ]
 ```
 
+### `fields-camel-cased-optional-starting-underscore`
+
+This rule will validate that object type field and interface type field names are camel-cased or start with an underscore.
+
+#### Rationale
+
+GraphQL field names should be valid GraphQL identifiers. For field names that have numeric names, one can use the approach to add an underscore to the start of the field name to make it a valid GraphQL identifier. This rule checks that field names follow the camelCase format, but also allowing for them to start with an underscore.
+
 ### `nodes-contain-entity-id`
 
 When a type implements the `Node` interface, it must contain a non-nullable string named `entityId`.
