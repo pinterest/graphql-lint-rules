@@ -1,4 +1,4 @@
-# Pinterest GraphQL Lint Rules
+# Pinterest GraphQL Lint Ruless
 
 This is a set of zero-dependency rules to be used with the [`graphql-schema-linter`](https://github.com/cjoudrey/graphql-schema-linter) package.
 
