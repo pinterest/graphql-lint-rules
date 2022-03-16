@@ -87,6 +87,37 @@ When a type implements the `Node` interface, it must contain a non-nullable stri
 
 For cross-compatibility with other APIs, our model types need to expose the primary identifier that can be used to identify the object across services. We do not, however, want to use `Node`'s `id` field for this identifier, as clients expect `id` to be globally unique across model and type (which our primary identifier is not). By enforcing the presence of `entityId`, we ensure there is a field to expose both, without changing the standard `Node` interface and still allowing for exceptional cases.
 
+### `relay-container-returns-connection`
+
+This rule will validate that types that end in `ConnectionContainer` return types that end in `Connection`.
+
+### `relay-connection-types-spec-pinterest-customization`
+
+This rule will validate the schema adheres to [section 2 (Connection Types)](https://facebook.github.io/relay/graphql/connections.htm#sec-Connection-Types) of the [Relay Cursor Connections Specification](https://facebook.github.io/relay/graphql/connections.htm).
+
+More specifically:
+
+- Only object type names may end in `Connection`. These object types are considered connection types.
+- Connection types must have a `edges` field that returns a list type.
+- Connection types must have a `pageInfo` field that returns a non-null `PageInfo` object.
+
+This is basically the same validation done in [`graphql-schema-linter`](https://github.com/cjoudrey/graphql-schema-linter), but with some extra validation:
+
+- `edges` field must return a list type of an object type that ends in `Edge`.
+
+### `relay-edge-types-spec-pinterest-customization`
+
+This rule will validate the schema adheres to [section 3 (Edge Types)](https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types) of the [Relay Cursor Connections Specification](https://facebook.github.io/relay/graphql/connections.htm).
+
+More specifically:
+
+- Connection types must have a `cursor` field that returns a type that serializes as a `String`.
+- Connection types must have a `node` field return either a `Scalar`, `Enum`, `Object`, `Interface`, `Union`, or a Non-Null wrapper around one of those types.
+
+Also, it adds some validation regarding Pinterest-specific rules:
+
+- Only edge type names may end in `Edge`. These object types are considered edge types.
+
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md).
