@@ -7,6 +7,7 @@ import { gql } from './utils';
 
 type Rule = (context: ValidationContext) => ASTVisitor;
 type RuleWithConfigurations = (
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   configurations: any,
   context: ValidationContext,
 ) => ASTVisitor;
