@@ -111,8 +111,8 @@ This rule will validate the schema adheres to [section 3 (Edge Types)](https://f
 
 More specifically:
 
-- Connection types must have a `cursor` field that returns a type that serializes as a `String`.
-- Connection types must have a `node` field return either a `Scalar`, `Enum`, `Object`, `Interface`, `Union`, or a Non-Null wrapper around one of those types.
+- Edge types must have a `cursor` field that returns a type that serializes as a `String`.
+- Edge types must have a `node` field return either a `Scalar`, `Enum`, `Object`, `Interface`, `Union`, or a Non-Null wrapper around one of those types.
 
 Also, it adds some validation regarding Pinterest-specific rules:
 
