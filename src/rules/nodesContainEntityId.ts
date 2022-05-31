@@ -1,11 +1,12 @@
-import {
+import type {
   ASTVisitor,
   FieldDefinitionNode,
   NamedTypeNode,
   ValidationContext,
 } from 'graphql';
 
-import { isNamedTypeNode, isNonNullTypeNode, ValidationError } from '../utils';
+import { ValidationError } from 'graphql-schema-linter';
+import { isNamedTypeNode, isNonNullTypeNode } from '../utils';
 
 function isProperEntityIdField(field: FieldDefinitionNode): boolean {
   return (

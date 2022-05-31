@@ -2,6 +2,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import multiInput from 'rollup-plugin-multi-input';
+import json from '@rollup/plugin-json';
 
 export default {
   input: ['src/rules/*.ts'],
@@ -18,5 +19,5 @@ export default {
  */
 `,
   },
-  plugins: [multiInput({ relative: 'src/rules' }), typescript(), nodeResolve(), commonjs()],
+  plugins: [multiInput({ relative: 'src/rules' }), typescript(), json(), nodeResolve(), commonjs()],
 };

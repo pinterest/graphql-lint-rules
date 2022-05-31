@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { ASTVisitor, ValidationContext } from 'graphql';
+import type { ASTVisitor, ValidationContext } from 'graphql';
 import { validateSchemaDefinition } from 'graphql-schema-linter/lib/validator';
 import { Configuration } from 'graphql-schema-linter/lib/configuration';
 import { Schema } from 'graphql-schema-linter/lib/schema';

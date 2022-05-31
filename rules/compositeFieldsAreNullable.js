@@ -11,9 +11,15 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var validation_error = require('./validation_error-a1229e5e.js');
-var printer = require('./printer-733cbc30.js');
-var utils = require('./utils-147ff1ff.js');
+var index = require('./index-34b81f35.js');
+var utils = require('./utils-76fcebe9.js');
+var printer = require('./printer-dfd26bcf.js');
+require('events');
+require('child_process');
+require('path');
+require('fs');
+require('os');
+require('module');
 
 /**
  * The set of allowed kind values for AST nodes.
@@ -78,10 +84,12 @@ var Kind = Object.freeze({
  * The enum type representing the possible kind values of AST nodes.
  */
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 /**
  * A replacement for instanceof which includes an error warning when multi-realm
  * constructors are detected.
  */
+
 // See: https://expressjs.com/en/advanced/best-practice-performance.html#set-node_env-to-production
 // See: https://webpack.js.org/guides/production/
 var instanceOf = process.env.NODE_ENV === 'production' ? // istanbul ignore next (See: 'https://github.com/graphql/graphql-js/issues/2317')
@@ -94,12 +102,16 @@ function instanceOf(value, constructor) {
     return true;
   }
 
-  if (value) {
-    var valueClass = value.constructor;
-    var className = constructor.name;
+  if (_typeof(value) === 'object' && value !== null) {
+    var _value$constructor;
 
-    if (className && valueClass && valueClass.name === className) {
-      throw new Error("Cannot use ".concat(className, " \"").concat(value, "\" from another module or realm.\n\nEnsure that there is only one instance of \"graphql\" in the node_modules\ndirectory. If different versions of \"graphql\" are the dependencies of other\nrelied on modules, use \"resolutions\" to ensure only one version is installed.\n\nhttps://yarnpkg.com/en/docs/selective-version-resolutions\n\nDuplicate \"graphql\" modules cannot be used at the same time since different\nversions may have different capabilities and behavior. The data from one\nversion used in the function from another could produce confusing and\nspurious results."));
+    var className = constructor.prototype[Symbol.toStringTag];
+    var valueClassName = // We still need to support constructor's name to detect conflicts with older versions of this library.
+    Symbol.toStringTag in value ? value[Symbol.toStringTag] : (_value$constructor = value.constructor) === null || _value$constructor === void 0 ? void 0 : _value$constructor.name;
+
+    if (className === valueClassName) {
+      var stringifiedValue = index.inspect(value);
+      throw new Error("Cannot use ".concat(className, " \"").concat(stringifiedValue, "\" from another module or realm.\n\nEnsure that there is only one instance of \"graphql\" in the node_modules\ndirectory. If different versions of \"graphql\" are the dependencies of other\nrelied on modules, use \"resolutions\" to ensure only one version is installed.\n\nhttps://yarnpkg.com/en/docs/selective-version-resolutions\n\nDuplicate \"graphql\" modules cannot be used at the same time since different\nversions may have different capabilities and behavior. The data from one\nversion used in the function from another could produce confusing and\nspurious results."));
     }
   }
 
@@ -248,9 +260,72 @@ function identityFunc(x) {
 }
 
 /**
+ * Returns a number indicating whether a reference string comes before, or after,
+ * or is the same as the given string in natural sort order.
+ *
+ * See: https://en.wikipedia.org/wiki/Natural_sort_order
+ *
+ */
+function naturalCompare(aStr, bStr) {
+  var aIdx = 0;
+  var bIdx = 0;
+
+  while (aIdx < aStr.length && bIdx < bStr.length) {
+    var aChar = aStr.charCodeAt(aIdx);
+    var bChar = bStr.charCodeAt(bIdx);
+
+    if (isDigit(aChar) && isDigit(bChar)) {
+      var aNum = 0;
+
+      do {
+        ++aIdx;
+        aNum = aNum * 10 + aChar - DIGIT_0;
+        aChar = aStr.charCodeAt(aIdx);
+      } while (isDigit(aChar) && aNum > 0);
+
+      var bNum = 0;
+
+      do {
+        ++bIdx;
+        bNum = bNum * 10 + bChar - DIGIT_0;
+        bChar = bStr.charCodeAt(bIdx);
+      } while (isDigit(bChar) && bNum > 0);
+
+      if (aNum < bNum) {
+        return -1;
+      }
+
+      if (aNum > bNum) {
+        return 1;
+      }
+    } else {
+      if (aChar < bChar) {
+        return -1;
+      }
+
+      if (aChar > bChar) {
+        return 1;
+      }
+
+      ++aIdx;
+      ++bIdx;
+    }
+  }
+
+  return aStr.length - bStr.length;
+}
+var DIGIT_0 = 48;
+var DIGIT_9 = 57;
+
+function isDigit(code) {
+  return !isNaN(code) && DIGIT_0 <= code && code <= DIGIT_9;
+}
+
+/**
  * Given an invalid input string and a list of valid options, returns a filtered
  * list of valid options sorted based on their similarity with the input.
  */
+
 function suggestionList(input, options) {
   var optionsByDistance = Object.create(null);
   var lexicalDistance = new LexicalDistance(input);
@@ -267,7 +342,7 @@ function suggestionList(input, options) {
 
   return Object.keys(optionsByDistance).sort(function (a, b) {
     var distanceDiff = optionsByDistance[a] - optionsByDistance[b];
-    return distanceDiff !== 0 ? distanceDiff : a.localeCompare(b);
+    return distanceDiff !== 0 ? distanceDiff : naturalCompare(a, b);
   });
 }
 /**
@@ -426,7 +501,7 @@ function valueFromASTUntyped(valueNode, variables) {
   } // istanbul ignore next (Not reachable. All possible value nodes have been considered)
 
 
-   printer.invariant(0, 'Unexpected value node: ' + validation_error.inspect(valueNode));
+  printer.invariant(0, 'Unexpected value node: ' + index.inspect(valueNode));
 }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -437,7 +512,7 @@ function isType(type) {
 }
 function assertType(type) {
   if (!isType(type)) {
-    throw new Error("Expected ".concat(validation_error.inspect(type), " to be a GraphQL type."));
+    throw new Error("Expected ".concat(index.inspect(type), " to be a GraphQL type."));
   }
 
   return type;
@@ -524,7 +599,7 @@ GraphQLList.prototype.toJSON = function toJSON() {
   return this.toString();
 };
 
-Object.defineProperty(GraphQLList.prototype, validation_error.SYMBOL_TO_STRING_TAG, {
+Object.defineProperty(GraphQLList.prototype, index.SYMBOL_TO_STRING_TAG, {
   get: function get() {
     return 'GraphQLList';
   }
@@ -579,7 +654,7 @@ GraphQLNonNull.prototype.toJSON = function toJSON() {
   return this.toString();
 };
 
-Object.defineProperty(GraphQLNonNull.prototype, validation_error.SYMBOL_TO_STRING_TAG, {
+Object.defineProperty(GraphQLNonNull.prototype, index.SYMBOL_TO_STRING_TAG, {
   get: function get() {
     return 'GraphQLNonNull';
   }
@@ -595,7 +670,7 @@ function isNullableType(type) {
 }
 function assertNullableType(type) {
   if (!isNullableType(type)) {
-    throw new Error("Expected ".concat(validation_error.inspect(type), " to be a GraphQL nullable type."));
+    throw new Error("Expected ".concat(index.inspect(type), " to be a GraphQL nullable type."));
   }
 
   return type;
@@ -655,12 +730,12 @@ var GraphQLScalarType = /*#__PURE__*/function () {
     this.extensions = config.extensions && toObjMap(config.extensions);
     this.astNode = config.astNode;
     this.extensionASTNodes = undefineIfEmpty(config.extensionASTNodes);
-    typeof config.name === 'string' || validation_error.devAssert(0, 'Must provide name.');
-    config.specifiedByUrl == null || typeof config.specifiedByUrl === 'string' || validation_error.devAssert(0, "".concat(this.name, " must provide \"specifiedByUrl\" as a string, ") + "but got: ".concat(validation_error.inspect(config.specifiedByUrl), "."));
-    config.serialize == null || typeof config.serialize === 'function' || validation_error.devAssert(0, "".concat(this.name, " must provide \"serialize\" function. If this custom Scalar is also used as an input type, ensure \"parseValue\" and \"parseLiteral\" functions are also provided."));
+    typeof config.name === 'string' || index.devAssert(0, 'Must provide name.');
+    config.specifiedByUrl == null || typeof config.specifiedByUrl === 'string' || index.devAssert(0, "".concat(this.name, " must provide \"specifiedByUrl\" as a string, ") + "but got: ".concat(index.inspect(config.specifiedByUrl), "."));
+    config.serialize == null || typeof config.serialize === 'function' || index.devAssert(0, "".concat(this.name, " must provide \"serialize\" function. If this custom Scalar is also used as an input type, ensure \"parseValue\" and \"parseLiteral\" functions are also provided."));
 
     if (config.parseLiteral) {
-      typeof config.parseValue === 'function' && typeof config.parseLiteral === 'function' || validation_error.devAssert(0, "".concat(this.name, " must provide both \"parseValue\" and \"parseLiteral\" functions."));
+      typeof config.parseValue === 'function' && typeof config.parseLiteral === 'function' || index.devAssert(0, "".concat(this.name, " must provide both \"parseValue\" and \"parseLiteral\" functions."));
     }
   }
 
@@ -692,7 +767,7 @@ var GraphQLScalarType = /*#__PURE__*/function () {
   ;
 
   _createClass(GraphQLScalarType, [{
-    key: validation_error.SYMBOL_TO_STRING_TAG,
+    key: index.SYMBOL_TO_STRING_TAG,
     get: function get() {
       return 'GraphQLScalarType';
     }
@@ -750,8 +825,8 @@ var GraphQLObjectType = /*#__PURE__*/function () {
     this.extensionASTNodes = undefineIfEmpty(config.extensionASTNodes);
     this._fields = defineFieldMap.bind(undefined, config);
     this._interfaces = defineInterfaces.bind(undefined, config);
-    typeof config.name === 'string' || validation_error.devAssert(0, 'Must provide name.');
-    config.isTypeOf == null || typeof config.isTypeOf === 'function' || validation_error.devAssert(0, "".concat(this.name, " must provide \"isTypeOf\" as a function, ") + "but got: ".concat(validation_error.inspect(config.isTypeOf), "."));
+    typeof config.name === 'string' || index.devAssert(0, 'Must provide name.');
+    config.isTypeOf == null || typeof config.isTypeOf === 'function' || index.devAssert(0, "".concat(this.name, " must provide \"isTypeOf\" as a function, ") + "but got: ".concat(index.inspect(config.isTypeOf), "."));
   }
 
   var _proto2 = GraphQLObjectType.prototype;
@@ -795,7 +870,7 @@ var GraphQLObjectType = /*#__PURE__*/function () {
   ;
 
   _createClass(GraphQLObjectType, [{
-    key: validation_error.SYMBOL_TO_STRING_TAG,
+    key: index.SYMBOL_TO_STRING_TAG,
     get: function get() {
       return 'GraphQLObjectType';
     }
@@ -810,21 +885,21 @@ function defineInterfaces(config) {
   var _resolveThunk;
 
   var interfaces = (_resolveThunk = resolveThunk(config.interfaces)) !== null && _resolveThunk !== void 0 ? _resolveThunk : [];
-  Array.isArray(interfaces) || validation_error.devAssert(0, "".concat(config.name, " interfaces must be an Array or a function which returns an Array."));
+  Array.isArray(interfaces) || index.devAssert(0, "".concat(config.name, " interfaces must be an Array or a function which returns an Array."));
   return interfaces;
 }
 
 function defineFieldMap(config) {
   var fieldMap = resolveThunk(config.fields);
-  isPlainObj(fieldMap) || validation_error.devAssert(0, "".concat(config.name, " fields must be an object with field names as keys or a function which returns such an object."));
+  isPlainObj(fieldMap) || index.devAssert(0, "".concat(config.name, " fields must be an object with field names as keys or a function which returns such an object."));
   return mapValue(fieldMap, function (fieldConfig, fieldName) {
     var _fieldConfig$args;
 
-    isPlainObj(fieldConfig) || validation_error.devAssert(0, "".concat(config.name, ".").concat(fieldName, " field config must be an object."));
-    !('isDeprecated' in fieldConfig) || validation_error.devAssert(0, "".concat(config.name, ".").concat(fieldName, " should provide \"deprecationReason\" instead of \"isDeprecated\"."));
-    fieldConfig.resolve == null || typeof fieldConfig.resolve === 'function' || validation_error.devAssert(0, "".concat(config.name, ".").concat(fieldName, " field resolver must be a function if ") + "provided, but got: ".concat(validation_error.inspect(fieldConfig.resolve), "."));
+    isPlainObj(fieldConfig) || index.devAssert(0, "".concat(config.name, ".").concat(fieldName, " field config must be an object."));
+    !('isDeprecated' in fieldConfig) || index.devAssert(0, "".concat(config.name, ".").concat(fieldName, " should provide \"deprecationReason\" instead of \"isDeprecated\"."));
+    fieldConfig.resolve == null || typeof fieldConfig.resolve === 'function' || index.devAssert(0, "".concat(config.name, ".").concat(fieldName, " field resolver must be a function if ") + "provided, but got: ".concat(index.inspect(fieldConfig.resolve), "."));
     var argsConfig = (_fieldConfig$args = fieldConfig.args) !== null && _fieldConfig$args !== void 0 ? _fieldConfig$args : {};
-    isPlainObj(argsConfig) || validation_error.devAssert(0, "".concat(config.name, ".").concat(fieldName, " args must be an object with argument names as keys."));
+    isPlainObj(argsConfig) || index.devAssert(0, "".concat(config.name, ".").concat(fieldName, " args must be an object with argument names as keys."));
     var args = objectEntries(argsConfig).map(function (_ref) {
       var argName = _ref[0],
           argConfig = _ref[1];
@@ -854,7 +929,7 @@ function defineFieldMap(config) {
 }
 
 function isPlainObj(obj) {
-  return validation_error.isObjectLike(obj) && !Array.isArray(obj);
+  return index.isObjectLike(obj) && !Array.isArray(obj);
 }
 
 function fieldsToFieldsConfig(fields) {
@@ -919,8 +994,8 @@ var GraphQLInterfaceType = /*#__PURE__*/function () {
     this.extensionASTNodes = undefineIfEmpty(config.extensionASTNodes);
     this._fields = defineFieldMap.bind(undefined, config);
     this._interfaces = defineInterfaces.bind(undefined, config);
-    typeof config.name === 'string' || validation_error.devAssert(0, 'Must provide name.');
-    config.resolveType == null || typeof config.resolveType === 'function' || validation_error.devAssert(0, "".concat(this.name, " must provide \"resolveType\" as a function, ") + "but got: ".concat(validation_error.inspect(config.resolveType), "."));
+    typeof config.name === 'string' || index.devAssert(0, 'Must provide name.');
+    config.resolveType == null || typeof config.resolveType === 'function' || index.devAssert(0, "".concat(this.name, " must provide \"resolveType\" as a function, ") + "but got: ".concat(index.inspect(config.resolveType), "."));
   }
 
   var _proto3 = GraphQLInterfaceType.prototype;
@@ -966,7 +1041,7 @@ var GraphQLInterfaceType = /*#__PURE__*/function () {
   ;
 
   _createClass(GraphQLInterfaceType, [{
-    key: validation_error.SYMBOL_TO_STRING_TAG,
+    key: index.SYMBOL_TO_STRING_TAG,
     get: function get() {
       return 'GraphQLInterfaceType';
     }
@@ -1009,8 +1084,8 @@ var GraphQLUnionType = /*#__PURE__*/function () {
     this.astNode = config.astNode;
     this.extensionASTNodes = undefineIfEmpty(config.extensionASTNodes);
     this._types = defineTypes.bind(undefined, config);
-    typeof config.name === 'string' || validation_error.devAssert(0, 'Must provide name.');
-    config.resolveType == null || typeof config.resolveType === 'function' || validation_error.devAssert(0, "".concat(this.name, " must provide \"resolveType\" as a function, ") + "but got: ".concat(validation_error.inspect(config.resolveType), "."));
+    typeof config.name === 'string' || index.devAssert(0, 'Must provide name.');
+    config.resolveType == null || typeof config.resolveType === 'function' || index.devAssert(0, "".concat(this.name, " must provide \"resolveType\" as a function, ") + "but got: ".concat(index.inspect(config.resolveType), "."));
   }
 
   var _proto4 = GraphQLUnionType.prototype;
@@ -1047,7 +1122,7 @@ var GraphQLUnionType = /*#__PURE__*/function () {
   ;
 
   _createClass(GraphQLUnionType, [{
-    key: validation_error.SYMBOL_TO_STRING_TAG,
+    key: index.SYMBOL_TO_STRING_TAG,
     get: function get() {
       return 'GraphQLUnionType';
     }
@@ -1060,7 +1135,7 @@ printer.defineInspect(GraphQLUnionType);
 
 function defineTypes(config) {
   var types = resolveThunk(config.types);
-  Array.isArray(types) || validation_error.devAssert(0, "Must provide Array of types or a function which returns such an array for Union ".concat(config.name, "."));
+  Array.isArray(types) || index.devAssert(0, "Must provide Array of types or a function which returns such an array for Union ".concat(config.name, "."));
   return types;
 }
 
@@ -1101,7 +1176,7 @@ var GraphQLEnumType
     this._nameLookup = keyMap(this._values, function (value) {
       return value.name;
     });
-    typeof config.name === 'string' || validation_error.devAssert(0, 'Must provide name.');
+    typeof config.name === 'string' || index.devAssert(0, 'Must provide name.');
   }
 
   var _proto5 = GraphQLEnumType.prototype;
@@ -1118,7 +1193,7 @@ var GraphQLEnumType
     var enumValue = this._valueLookup.get(outputValue);
 
     if (enumValue === undefined) {
-      throw new validation_error.GraphQLError("Enum \"".concat(this.name, "\" cannot represent value: ").concat(validation_error.inspect(outputValue)));
+      throw new index.GraphQLError("Enum \"".concat(this.name, "\" cannot represent value: ").concat(index.inspect(outputValue)));
     }
 
     return enumValue.name;
@@ -1128,14 +1203,14 @@ var GraphQLEnumType
   /* T */
   {
     if (typeof inputValue !== 'string') {
-      var valueStr = validation_error.inspect(inputValue);
-      throw new validation_error.GraphQLError("Enum \"".concat(this.name, "\" cannot represent non-string value: ").concat(valueStr, ".") + didYouMeanEnumValue(this, valueStr));
+      var valueStr = index.inspect(inputValue);
+      throw new index.GraphQLError("Enum \"".concat(this.name, "\" cannot represent non-string value: ").concat(valueStr, ".") + didYouMeanEnumValue(this, valueStr));
     }
 
     var enumValue = this.getValue(inputValue);
 
     if (enumValue == null) {
-      throw new validation_error.GraphQLError("Value \"".concat(inputValue, "\" does not exist in \"").concat(this.name, "\" enum.") + didYouMeanEnumValue(this, inputValue));
+      throw new index.GraphQLError("Value \"".concat(inputValue, "\" does not exist in \"").concat(this.name, "\" enum.") + didYouMeanEnumValue(this, inputValue));
     }
 
     return enumValue.value;
@@ -1147,7 +1222,7 @@ var GraphQLEnumType
     // Note: variables will be resolved to a value before calling this function.
     if (valueNode.kind !== Kind.ENUM) {
       var valueStr = printer.print(valueNode);
-      throw new validation_error.GraphQLError("Enum \"".concat(this.name, "\" cannot represent non-enum value: ").concat(valueStr, ".") + didYouMeanEnumValue(this, valueStr), valueNode);
+      throw new index.GraphQLError("Enum \"".concat(this.name, "\" cannot represent non-enum value: ").concat(valueStr, ".") + didYouMeanEnumValue(this, valueStr), valueNode);
     }
 
     var enumValue = this.getValue(valueNode.value);
@@ -1155,7 +1230,7 @@ var GraphQLEnumType
     if (enumValue == null) {
       var _valueStr = printer.print(valueNode);
 
-      throw new validation_error.GraphQLError("Value \"".concat(_valueStr, "\" does not exist in \"").concat(this.name, "\" enum.") + didYouMeanEnumValue(this, _valueStr), valueNode);
+      throw new index.GraphQLError("Value \"".concat(_valueStr, "\" does not exist in \"").concat(this.name, "\" enum.") + didYouMeanEnumValue(this, _valueStr), valueNode);
     }
 
     return enumValue.value;
@@ -1195,7 +1270,7 @@ var GraphQLEnumType
   ;
 
   _createClass(GraphQLEnumType, [{
-    key: validation_error.SYMBOL_TO_STRING_TAG,
+    key: index.SYMBOL_TO_STRING_TAG,
     get: function get() {
       return 'GraphQLEnumType';
     }
@@ -1215,12 +1290,12 @@ function didYouMeanEnumValue(enumType, unknownValueStr) {
 }
 
 function defineEnumValues(typeName, valueMap) {
-  isPlainObj(valueMap) || validation_error.devAssert(0, "".concat(typeName, " values must be an object with value names as keys."));
+  isPlainObj(valueMap) || index.devAssert(0, "".concat(typeName, " values must be an object with value names as keys."));
   return objectEntries(valueMap).map(function (_ref2) {
     var valueName = _ref2[0],
         valueConfig = _ref2[1];
-    isPlainObj(valueConfig) || validation_error.devAssert(0, "".concat(typeName, ".").concat(valueName, " must refer to an object with a \"value\" key ") + "representing an internal value but got: ".concat(validation_error.inspect(valueConfig), "."));
-    !('isDeprecated' in valueConfig) || validation_error.devAssert(0, "".concat(typeName, ".").concat(valueName, " should provide \"deprecationReason\" instead of \"isDeprecated\"."));
+    isPlainObj(valueConfig) || index.devAssert(0, "".concat(typeName, ".").concat(valueName, " must refer to an object with a \"value\" key ") + "representing an internal value but got: ".concat(index.inspect(valueConfig), "."));
+    !('isDeprecated' in valueConfig) || index.devAssert(0, "".concat(typeName, ".").concat(valueName, " should provide \"deprecationReason\" instead of \"isDeprecated\"."));
     return {
       name: valueName,
       description: valueConfig.description,
@@ -1261,7 +1336,7 @@ var GraphQLInputObjectType = /*#__PURE__*/function () {
     this.astNode = config.astNode;
     this.extensionASTNodes = undefineIfEmpty(config.extensionASTNodes);
     this._fields = defineInputFieldMap.bind(undefined, config);
-    typeof config.name === 'string' || validation_error.devAssert(0, 'Must provide name.');
+    typeof config.name === 'string' || index.devAssert(0, 'Must provide name.');
   }
 
   var _proto6 = GraphQLInputObjectType.prototype;
@@ -1282,6 +1357,7 @@ var GraphQLInputObjectType = /*#__PURE__*/function () {
         description: field.description,
         type: field.type,
         defaultValue: field.defaultValue,
+        deprecationReason: field.deprecationReason,
         extensions: field.extensions,
         astNode: field.astNode
       };
@@ -1306,7 +1382,7 @@ var GraphQLInputObjectType = /*#__PURE__*/function () {
   ;
 
   _createClass(GraphQLInputObjectType, [{
-    key: validation_error.SYMBOL_TO_STRING_TAG,
+    key: index.SYMBOL_TO_STRING_TAG,
     get: function get() {
       return 'GraphQLInputObjectType';
     }
@@ -1319,9 +1395,9 @@ printer.defineInspect(GraphQLInputObjectType);
 
 function defineInputFieldMap(config) {
   var fieldMap = resolveThunk(config.fields);
-  isPlainObj(fieldMap) || validation_error.devAssert(0, "".concat(config.name, " fields must be an object with field names as keys or a function which returns such an object."));
+  isPlainObj(fieldMap) || index.devAssert(0, "".concat(config.name, " fields must be an object with field names as keys or a function which returns such an object."));
   return mapValue(fieldMap, function (fieldConfig, fieldName) {
-    !('resolve' in fieldConfig) || validation_error.devAssert(0, "".concat(config.name, ".").concat(fieldName, " field has a resolve property, but Input Types cannot define resolvers."));
+    !('resolve' in fieldConfig) || index.devAssert(0, "".concat(config.name, ".").concat(fieldName, " field has a resolve property, but Input Types cannot define resolvers."));
     return {
       name: fieldName,
       description: fieldConfig.description,
@@ -1364,7 +1440,7 @@ function typeFromAST(schema, typeNode) {
   } // istanbul ignore next (Not reachable. All possible type nodes have been considered)
 
 
-   printer.invariant(0, 'Unexpected type node: ' + validation_error.inspect(typeNode));
+  printer.invariant(0, 'Unexpected type node: ' + index.inspect(typeNode));
 }
 
 function isAllowedNonNullCompositeField(node, type, exceptions) {
@@ -1391,7 +1467,7 @@ function CompositeFieldsAreNullable(configuration, context) {
                             ? utils.unwrapAstNode(lastAncestor)
                             : null;
                         const parentName = parentNode ? utils.getNodeName(parentNode) : 'root';
-                        context.reportError(new validation_error.validation_error.ValidationError(ruleKey, `The field \`${parentName}.${node.name.value}\` uses a composite type and should be nullable.`, [node]));
+                        context.reportError(new index.ValidationError(ruleKey, `The field \`${parentName}.${node.name.value}\` uses a composite type and should be nullable.`, [node]));
                     }
                 }
             }

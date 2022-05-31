@@ -11,8 +11,14 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var validation_error = require('./validation_error-a1229e5e.js');
-var utils = require('./utils-147ff1ff.js');
+var index = require('./index-34b81f35.js');
+var utils = require('./utils-76fcebe9.js');
+require('events');
+require('child_process');
+require('path');
+require('fs');
+require('os');
+require('module');
 
 const validGraphQLNameTest = RegExp('^[_a-z][a-zA-Z0-9]*$');
 function FieldsCamelCasedOptionalStartingUnderscore(context) {
@@ -23,7 +29,7 @@ function FieldsCamelCasedOptionalStartingUnderscore(context) {
                 const lastAncestor = ancestors[ancestors.length - 1];
                 const parentNode = lastAncestor ? utils.unwrapAstNode(lastAncestor) : null;
                 const parentName = parentNode ? utils.getNodeName(parentNode) : 'root';
-                context.reportError(new validation_error.validation_error.ValidationError('fields-camel-cased-optional-starting-underscore', `The field \`${parentName}.${fieldName}\` is not camel-cased or starts with underscore.`, [node]));
+                context.reportError(new index.ValidationError('fields-camel-cased-optional-starting-underscore', `The field \`${parentName}.${fieldName}\` is not camel-cased or starts with underscore.`, [node]));
             }
         },
     };

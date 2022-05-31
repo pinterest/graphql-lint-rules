@@ -1,4 +1,4 @@
-import {
+import type {
   ASTVisitor,
   NamedTypeNode,
   ObjectTypeDefinitionNode,
@@ -6,7 +6,7 @@ import {
   ValidationContext,
 } from 'graphql';
 
-import { ValidationError } from '../utils';
+import { ValidationError } from 'graphql-schema-linter';
 
 export function RelayContainerReturnsConnection(
   context: ValidationContext,

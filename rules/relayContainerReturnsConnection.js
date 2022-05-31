@@ -11,12 +11,18 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var validation_error = require('./validation_error-a1229e5e.js');
+var index = require('./index-34b81f35.js');
+require('events');
+require('child_process');
+require('path');
+require('fs');
+require('os');
+require('module');
 
 function RelayContainerReturnsConnection(context) {
     const ensureNameDoesNotEndWithContainer = (node) => {
         if (node.name.value.match(/ConnectionContainer$/)) {
-            context.reportError(new validation_error.validation_error.ValidationError('relay-container-returns-connection', `Types that end in \`ConnectionContainer\` must be an object type as per the relay spec. \`${node.name.value}\` is not an object type.`, [node]));
+            context.reportError(new index.ValidationError('relay-container-returns-connection', `Types that end in \`ConnectionContainer\` must be an object type as per the relay spec. \`${node.name.value}\` is not an object type.`, [node]));
         }
     };
     return {
@@ -26,14 +32,13 @@ function RelayContainerReturnsConnection(context) {
         EnumTypeDefinition: ensureNameDoesNotEndWithContainer,
         InputObjectTypeDefinition: ensureNameDoesNotEndWithContainer,
         ObjectTypeDefinition(node) {
-            var _a;
             const typeName = node.name.value;
             if (!typeName.endsWith('ConnectionContainer')) {
                 return;
             }
-            const returnsConnection = (_a = node.fields) === null || _a === void 0 ? void 0 : _a.every((field) => field.type.name.value.endsWith('Connection'));
+            const returnsConnection = node.fields?.every((field) => field.type.name.value.endsWith('Connection'));
             if (!returnsConnection) {
-                context.reportError(new validation_error.validation_error.ValidationError('relay-container-returns-connection', `The \`${typeName}\` Container must return a Connection.`, [node]));
+                context.reportError(new index.ValidationError('relay-container-returns-connection', `The \`${typeName}\` Container must return a Connection.`, [node]));
                 return;
             }
         },
