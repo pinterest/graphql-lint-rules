@@ -1,6 +1,7 @@
-import { ValidationContext, ASTVisitor } from 'graphql';
+import type { ValidationContext, ASTVisitor } from 'graphql';
 
-import { getNodeName, ValidationError, unwrapAstNode } from '../utils';
+import { ValidationError } from 'graphql-schema-linter';
+import { getNodeName, unwrapAstNode } from '../utils';
 
 const validGraphQLNameTest = RegExp('^[_a-z][a-zA-Z0-9]*$');
 

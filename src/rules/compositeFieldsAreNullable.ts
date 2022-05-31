@@ -6,6 +6,8 @@ import {
   ASTVisitor,
 } from 'graphql';
 
+import { ValidationError } from 'graphql-schema-linter';
+
 import {
   Configuration,
   isAllowedByDirective,
@@ -13,7 +15,6 @@ import {
   isNamedTypeNode,
   isNonNullTypeNode,
   getNodeName,
-  ValidationError,
   unwrapAstNode,
 } from '../utils';
 

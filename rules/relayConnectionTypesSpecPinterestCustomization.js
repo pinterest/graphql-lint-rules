@@ -11,27 +11,32 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var validation_error = require('./validation_error-a1229e5e.js');
-var printer = require('./printer-733cbc30.js');
-var utils = require('./utils-147ff1ff.js');
+var index = require('./index-34b81f35.js');
+var utils = require('./utils-76fcebe9.js');
+var printer = require('./printer-dfd26bcf.js');
+require('events');
+require('child_process');
+require('path');
+require('fs');
+require('os');
+require('module');
 
 const MANDATORY_FIELDS = ['pageInfo', 'edges'];
 function RelayConnectionTypesSpecPinterestCustomization(context) {
     const ensureNameDoesNotEndWithConnection = (node) => {
         if (node.name.value.match(/Connection$/)) {
-            context.reportError(new validation_error.validation_error.ValidationError('relay-connection-types-spec-pinterest-customization', `Types that end in \`Connection\` must be an object type as per the relay spec. \`${node.name.value}\` is not an object type.`, [node]));
+            context.reportError(new index.ValidationError('relay-connection-types-spec-pinterest-customization', `Types that end in \`Connection\` must be an object type as per the relay spec. \`${node.name.value}\` is not an object type.`, [node]));
         }
     };
     const isValidConnection = (node) => {
-        var _a;
         const typeName = node.name.value;
         if (!typeName.endsWith('Connection')) {
             return false;
         }
-        const fieldNames = (_a = node.fields) === null || _a === void 0 ? void 0 : _a.map((field) => field.name.value);
-        const missingFields = MANDATORY_FIELDS.filter((requiredField) => (fieldNames === null || fieldNames === void 0 ? void 0 : fieldNames.indexOf(requiredField)) === -1);
+        const fieldNames = node.fields?.map((field) => field.name.value);
+        const missingFields = MANDATORY_FIELDS.filter((requiredField) => fieldNames?.indexOf(requiredField) === -1);
         if (missingFields.length) {
-            context.reportError(new validation_error.validation_error.ValidationError('relay-connection-types-spec-pinterest-customization', `Connection \`${typeName}\` is missing the following field${missingFields.length > 1 ? 's' : ''}: ${missingFields.join(', ')}.`, [node]));
+            context.reportError(new index.ValidationError('relay-connection-types-spec-pinterest-customization', `Connection \`${typeName}\` is missing the following field${missingFields.length > 1 ? 's' : ''}: ${missingFields.join(', ')}.`, [node]));
             return false;
         }
         return true;
@@ -47,19 +52,19 @@ function RelayConnectionTypesSpecPinterestCustomization(context) {
     };
     const isValidEdgesField = (edgesField, connectionNode) => {
         const typeName = connectionNode.name.value;
-        let edgesFieldType = edgesField === null || edgesField === void 0 ? void 0 : edgesField.type;
-        if ((edgesFieldType === null || edgesFieldType === void 0 ? void 0 : edgesFieldType.kind) == 'NonNullType') {
+        let edgesFieldType = edgesField?.type;
+        if (edgesFieldType?.kind == 'NonNullType') {
             edgesFieldType = edgesFieldType.type;
         }
-        if ((edgesFieldType === null || edgesFieldType === void 0 ? void 0 : edgesFieldType.kind) != 'ListType') {
-            context.reportError(new validation_error.validation_error.ValidationError('relay-connection-types-spec-pinterest-customization', `The \`${typeName}.edges\` field must return a list of edges not \`${edgesFieldType === null || edgesFieldType === void 0 ? void 0 : edgesFieldType.kind}\`.`, [connectionNode]));
+        if (edgesFieldType?.kind != 'ListType') {
+            context.reportError(new index.ValidationError('relay-connection-types-spec-pinterest-customization', `The \`${typeName}.edges\` field must return a list of edges not \`${edgesFieldType?.kind}\`.`, [connectionNode]));
             return false;
         }
         const edgesFieldName = edgesFieldType
             ? utils.getNodeName(utils.unwrapType(edgesFieldType))
             : 'undefined';
-        if (!(edgesFieldName === null || edgesFieldName === void 0 ? void 0 : edgesFieldName.endsWith('Edge'))) {
-            context.reportError(new validation_error.validation_error.ValidationError('relay-connection-types-spec-pinterest-customization', `The \`${typeName}.edges\` field type must be of a valid type, while \`${edgesFieldName}\` isn\'t.`, [connectionNode]));
+        if (!edgesFieldName?.endsWith('Edge')) {
+            context.reportError(new index.ValidationError('relay-connection-types-spec-pinterest-customization', `The \`${typeName}.edges\` field type must be of a valid type, while \`${edgesFieldName}\` isn\'t.`, [connectionNode]));
             return false;
         }
         return true;
@@ -70,7 +75,7 @@ function RelayConnectionTypesSpecPinterestCustomization(context) {
             ? printer.print(pageInfoField.type)
             : 'undefined';
         if (printedPageInfoFieldType != 'PageInfo!') {
-            context.reportError(new validation_error.validation_error.ValidationError('relay-connection-types-spec-pinterest-customization', `The \`${typeName}.pageInfo\` field must return a non-null \`PageInfo\` object not \`${printedPageInfoFieldType}\`.`, [connectionNode]));
+            context.reportError(new index.ValidationError('relay-connection-types-spec-pinterest-customization', `The \`${typeName}.pageInfo\` field must return a non-null \`PageInfo\` object not \`${printedPageInfoFieldType}\`.`, [connectionNode]));
             return false;
         }
         return true;

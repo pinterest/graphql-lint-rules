@@ -1,4 +1,4 @@
-import {
+import type {
   ArgumentNode,
   ASTVisitor,
   DirectiveNode,
@@ -11,7 +11,8 @@ import {
 
 import { print } from 'graphql/language/printer';
 
-import { getNodeName, unwrapType, ValidationError } from '../utils';
+import { ValidationError } from 'graphql-schema-linter';
+import { getNodeName, unwrapType } from '../utils';
 
 const MANDATORY_FIELDS = ['cursor', 'node'];
 

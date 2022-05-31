@@ -1,4 +1,4 @@
-import {
+import type {
   ASTVisitor,
   FieldDefinitionNode,
   ObjectTypeDefinitionNode,
@@ -6,7 +6,8 @@ import {
   ValidationContext,
 } from 'graphql';
 
-import { getNodeName, unwrapType, ValidationError } from '../utils';
+import { ValidationError } from 'graphql-schema-linter';
+import { getNodeName, unwrapType } from '../utils';
 import { print } from 'graphql/language/printer';
 
 const MANDATORY_FIELDS = ['pageInfo', 'edges'];

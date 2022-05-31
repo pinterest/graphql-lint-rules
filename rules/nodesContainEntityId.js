@@ -11,8 +11,14 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var validation_error = require('./validation_error-a1229e5e.js');
-var utils = require('./utils-147ff1ff.js');
+var index = require('./index-34b81f35.js');
+var utils = require('./utils-76fcebe9.js');
+require('events');
+require('child_process');
+require('path');
+require('fs');
+require('os');
+require('module');
 
 function isProperEntityIdField(field) {
     return (field.name.value == 'entityId' &&
@@ -23,10 +29,9 @@ function isProperEntityIdField(field) {
 function NodesContainEntityId(context) {
     return {
         ObjectTypeDefinition(node) {
-            var _a, _b;
-            if (((_a = node.interfaces) === null || _a === void 0 ? void 0 : _a.some((iface) => iface.name.value == 'Node')) &&
-                !((_b = node.fields) === null || _b === void 0 ? void 0 : _b.some((field) => isProperEntityIdField(field)))) {
-                context.reportError(new validation_error.validation_error.ValidationError('nodes-contain-entity-id', `The Node type \`${node.name.value}\` must have a non-nullable "entityId" string.`, [node]));
+            if (node.interfaces?.some((iface) => iface.name.value == 'Node') &&
+                !node.fields?.some((field) => isProperEntityIdField(field))) {
+                context.reportError(new index.ValidationError('nodes-contain-entity-id', `The Node type \`${node.name.value}\` must have a non-nullable "entityId" string.`, [node]));
             }
         },
     };

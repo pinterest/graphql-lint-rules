@@ -1,4 +1,4 @@
-import {
+import type {
   ASTNode,
   DirectiveNode,
   GraphQLCompositeType,
@@ -10,9 +10,8 @@ import {
   TypeNode,
 } from 'graphql';
 
-export { ValidationError } from 'graphql-schema-linter/lib/validation_error';
-
-declare type Configuration = typeof import('graphql-schema-linter/lib/configuration');
+declare type Configuration =
+  typeof import('graphql-schema-linter/lib/configuration');
 
 export { Configuration };
 
