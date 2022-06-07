@@ -11,12 +11,14 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var index = require('./index-34b81f35.js');
+var index = require('./index-44122349.js');
 require('events');
 require('child_process');
 require('path');
 require('fs');
+require('util');
 require('os');
+require('assert');
 require('module');
 
 function RelayContainerReturnsConnection(context) {

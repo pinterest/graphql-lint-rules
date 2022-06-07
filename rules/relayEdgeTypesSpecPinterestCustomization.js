@@ -11,14 +11,15 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var printer = require('./printer-dfd26bcf.js');
-var index = require('./index-34b81f35.js');
+var index = require('./index-44122349.js');
 var utils = require('./utils-76fcebe9.js');
 require('events');
 require('child_process');
 require('path');
 require('fs');
+require('util');
 require('os');
+require('assert');
 require('module');
 
 const MANDATORY_FIELDS = ['cursor', 'node'];
@@ -92,7 +93,7 @@ function RelayEdgeTypesSpecPinterestCustomization(context) {
             return false;
         }
         const cursorTypeName = cursorFieldType
-            ? printer.print(cursorFieldType)
+            ? index.print(cursorFieldType)
             : 'undefined';
         if (!hasStringType(context, cursorTypeName)) {
             context.reportError(new index.ValidationError('relay-edge-types-spec-pinterest-customization', `The \`${typeName}.cursor\` field must return a type that serializes as a String not \`${cursorTypeName}\`.`, [connectionNode]));
@@ -106,7 +107,7 @@ function RelayEdgeTypesSpecPinterestCustomization(context) {
         if (nodeFieldType?.kind == 'NonNullType') {
             nodeFieldType = nodeFieldType.type;
         }
-        const nodeFieldName = nodeFieldType ? printer.print(nodeFieldType) : 'undefined';
+        const nodeFieldName = nodeFieldType ? index.print(nodeFieldType) : 'undefined';
         if (nodeFieldType?.kind == 'ListType') {
             context.reportError(new index.ValidationError('relay-edge-types-spec-pinterest-customization', `The \`${typeName}.node\` field must return a NamedType or NonNullType, not ListType.`, [connectionNode]));
             return false;

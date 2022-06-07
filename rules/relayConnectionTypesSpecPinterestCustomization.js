@@ -11,14 +11,15 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var index = require('./index-34b81f35.js');
+var index = require('./index-44122349.js');
 var utils = require('./utils-76fcebe9.js');
-var printer = require('./printer-dfd26bcf.js');
 require('events');
 require('child_process');
 require('path');
 require('fs');
+require('util');
 require('os');
+require('assert');
 require('module');
 
 const MANDATORY_FIELDS = ['pageInfo', 'edges'];
@@ -72,7 +73,7 @@ function RelayConnectionTypesSpecPinterestCustomization(context) {
     const isValidPageInfoField = (pageInfoField, connectionNode) => {
         const typeName = connectionNode.name.value;
         const printedPageInfoFieldType = pageInfoField
-            ? printer.print(pageInfoField.type)
+            ? index.print(pageInfoField.type)
             : 'undefined';
         if (printedPageInfoFieldType != 'PageInfo!') {
             context.reportError(new index.ValidationError('relay-connection-types-spec-pinterest-customization', `The \`${typeName}.pageInfo\` field must return a non-null \`PageInfo\` object not \`${printedPageInfoFieldType}\`.`, [connectionNode]));
