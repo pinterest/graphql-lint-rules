@@ -41,7 +41,7 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message: 'The field `Entity.other` is returning a JSON.',
+          message: 'The field `Entity.other` is returning a JSON value.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
@@ -68,7 +68,7 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message: 'The field `Entity.other` is returning a JSON.',
+          message: 'The field `Entity.other` is returning a JSON value.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
@@ -95,7 +95,7 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message: 'The field `Entity.other` is returning a JSON.',
+          message: 'The field `Entity.other` is returning a JSON value.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
@@ -122,7 +122,7 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message: 'The field `Entity.other` is returning a JSON.',
+          message: 'The field `Entity.other` is returning a JSON value.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
@@ -149,7 +149,7 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message: 'The field `Entity.other` is returning a JSON.',
+          message: 'The field `Entity.other` is returning a JSON value.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
