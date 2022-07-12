@@ -1,4 +1,4 @@
-import { FieldsDoNotReturnJson } from '../../src/rules/fieldsDoNotReturnJSON';
+import { FieldsDoNotReturnJson } from '../../src/rules/fieldsDoNotReturnJson';
 
 import { gql } from '../utils';
 
