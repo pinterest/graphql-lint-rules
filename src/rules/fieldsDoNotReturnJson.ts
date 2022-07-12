@@ -18,7 +18,7 @@ export function FieldsDoNotReturnJson(context: ValidationContext): ASTVisitor {
         context.reportError(
           new ValidationError(
             'fields-do-not-return-json',
-            `The field \`${parentName}.${fieldName}\` is returning a JSON.`,
+            `The field \`${parentName}.${fieldName}\` is returning a JSON value.`,
             [node],
           ),
         );
