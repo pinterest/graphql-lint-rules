@@ -122,6 +122,12 @@ Also, it adds some validation regarding Pinterest-specific rules:
 
 - Only edge type names may end in `Edge`. These object types are considered edge types.
 
+### `relay-id-field-type`
+
+This rule validates that when an `id` field is used, it is of an `ID` scalar type that is assumed to exist in the schema as a string scalar.
+
+Relay [imposes this requirement](https://github.com/facebook/relay/issues/1682#issuecomment-296393416) because it makes assumptions about any `id` field that it sees.
+
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md).
