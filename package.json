@@ -1,6 +1,6 @@
 {
   "name": "@pinterest/graphql-lint-rules",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Pinterest lint rules for use with graphql-schema-linter",
   "license": "Apache-2.0",
   "repository": "github:pinterest/graphql-lint-rules",
