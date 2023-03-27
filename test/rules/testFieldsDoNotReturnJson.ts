@@ -41,7 +41,8 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message: 'The field `Entity.other` is returning a JSON value.',
+          message:
+            'Check the type of the `Entity.other` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
@@ -68,7 +69,8 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message: 'The field `Entity.other` is returning a JSON value.',
+          message:
+            'Check the type of the `Entity.other` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
@@ -95,7 +97,8 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message: 'The field `Entity.other` is returning a JSON value.',
+          message:
+            'Check the type of the `Entity.other` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
@@ -122,7 +125,8 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message: 'The field `Entity.other` is returning a JSON value.',
+          message:
+            'Check the type of the `Entity.other` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
@@ -149,7 +153,8 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message: 'The field `Entity.other` is returning a JSON value.',
+          message:
+            'Check the type of the `Entity.other` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.',
           locations: [{ line: 13, column: 11 }],
         },
       ],

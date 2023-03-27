@@ -34,7 +34,7 @@ function FieldsDoNotReturnJson(context) {
                 ? utils.getNodeName(utils.unwrapType(fieldType))
                 : 'undefined';
             if (unwrappedFieldTypeStr == 'JSON') {
-                context.reportError(new index.ValidationError('fields-do-not-return-json', `The field \`${parentName}.${fieldName}\` is returning a JSON value.`, [node]));
+                context.reportError(new index.ValidationError('fields-do-not-return-json', `Check the type of the \`${parentName}.${fieldName}\` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.`, [node]));
             }
         },
     };

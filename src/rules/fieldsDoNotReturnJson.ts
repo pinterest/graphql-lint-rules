@@ -18,7 +18,7 @@ export function FieldsDoNotReturnJson(context: ValidationContext): ASTVisitor {
         context.reportError(
           new ValidationError(
             'fields-do-not-return-json',
-            `The field \`${parentName}.${fieldName}\` is returning a JSON value.`,
+            `Check the type of the \`${parentName}.${fieldName}\` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.`,
             [node],
           ),
         );
