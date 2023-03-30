@@ -22,9 +22,14 @@ require('os');
 require('assert');
 require('module');
 
-function FieldsDoNotReturnJson(context) {
+function FieldsDoNotReturnJson(configuration, context) {
     return {
         FieldDefinition: (node, _key, _parent, _path, ancestors) => {
+            const ruleKey = 'fields-do-not-return-json';
+            const options = configuration.getRulesOptions()[ruleKey] || {};
+            const customMessage = options.customMessage
+                ? ' ' + options.customMessage
+                : '';
             const fieldName = node.name.value;
             const fieldType = node.type;
             const lastAncestor = ancestors[ancestors.length - 1];
@@ -34,7 +39,7 @@ function FieldsDoNotReturnJson(context) {
                 ? utils.getNodeName(utils.unwrapType(fieldType))
                 : 'undefined';
             if (unwrappedFieldTypeStr == 'JSON') {
-                context.reportError(new index.ValidationError('fields-do-not-return-json', `Check the type of the \`${parentName}.${fieldName}\` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.`, [node]));
+                context.reportError(new index.ValidationError('fields-do-not-return-json', `The field \`${parentName}.${fieldName}\` is returning a JSON value.${customMessage}`, [node]));
             }
         },
     };

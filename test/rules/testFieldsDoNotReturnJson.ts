@@ -41,11 +41,44 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message:
-            'Check the type of the `Entity.other` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.',
+          message: 'The field `Entity.other` is returning a JSON value.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
+    );
+  });
+
+  it('disallows straight JSON field', () => {
+    expectFailsRule(
+      FieldsDoNotReturnJson,
+      gql`
+        scalar ID
+        scalar JSON
+          @specifiedBy(
+            url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf"
+          )
+        interface Node {
+          id: ID!
+        }
+        type Entity implements Node {
+          id: ID!
+          entityId: String
+          other: JSON
+        }
+      `,
+      [
+        {
+          message: 'The field `Entity.other` is returning a JSON value. Test',
+          locations: [{ line: 13, column: 11 }],
+        },
+      ],
+      {
+        rulesOptions: {
+          'fields-do-not-return-json': {
+            customMessage: 'Test',
+          },
+        },
+      },
     );
   });
 
@@ -69,8 +102,7 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message:
-            'Check the type of the `Entity.other` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.',
+          message: 'The field `Entity.other` is returning a JSON value.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
@@ -97,8 +129,7 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message:
-            'Check the type of the `Entity.other` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.',
+          message: 'The field `Entity.other` is returning a JSON value.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
@@ -125,8 +156,7 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message:
-            'Check the type of the `Entity.other` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.',
+          message: 'The field `Entity.other` is returning a JSON value.',
           locations: [{ line: 13, column: 11 }],
         },
       ],
@@ -153,8 +183,7 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message:
-            'Check the type of the `Entity.other` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.',
+          message: 'The field `Entity.other` is returning a JSON value.',
           locations: [{ line: 13, column: 11 }],
         },
       ],

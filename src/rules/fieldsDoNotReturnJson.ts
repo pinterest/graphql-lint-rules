@@ -1,11 +1,24 @@
 import type { ValidationContext, ASTVisitor } from 'graphql';
 
 import { ValidationError } from 'graphql-schema-linter';
-import { getNodeName, unwrapAstNode, unwrapType } from '../utils';
+import {
+  Configuration,
+  getNodeName,
+  unwrapAstNode,
+  unwrapType,
+} from '../utils';
 
-export function FieldsDoNotReturnJson(context: ValidationContext): ASTVisitor {
+export function FieldsDoNotReturnJson(
+  configuration: Configuration,
+  context: ValidationContext,
+): ASTVisitor {
   return {
     FieldDefinition: (node, _key, _parent, _path, ancestors) => {
+      const ruleKey = 'fields-do-not-return-json';
+      const options = configuration.getRulesOptions()[ruleKey] || {};
+      const customMessage = options.customMessage
+        ? ' ' + options.customMessage
+        : '';
       const fieldName = node.name.value;
       const fieldType = node.type;
       const lastAncestor = ancestors[ancestors.length - 1];
@@ -18,7 +31,7 @@ export function FieldsDoNotReturnJson(context: ValidationContext): ASTVisitor {
         context.reportError(
           new ValidationError(
             'fields-do-not-return-json',
-            `Check the type of the \`${parentName}.${fieldName}\` in extensions and make sure that the value_type is not a Dict. You can type it using https://w.pinadmin.com/display/API/Conversion+Patterns.`,
+            `The field \`${parentName}.${fieldName}\` is returning a JSON value.${customMessage}`,
             [node],
           ),
         );
