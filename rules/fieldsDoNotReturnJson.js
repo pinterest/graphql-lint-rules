@@ -28,7 +28,7 @@ function FieldsDoNotReturnJson(configuration, context) {
             const ruleKey = 'fields-do-not-return-json';
             const options = configuration.getRulesOptions()[ruleKey] || {};
             const customMessage = options.customMessage
-                ? ' ' + options.customMessage
+                ? '\nMore explanation: ' + options.customMessage
                 : '';
             const fieldName = node.name.value;
             const fieldType = node.type;

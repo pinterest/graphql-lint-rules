@@ -68,7 +68,8 @@ describe('FieldsDoNotReturnJson rule', () => {
       `,
       [
         {
-          message: 'The field `Entity.other` is returning a JSON value. Test',
+          message:
+            'The field `Entity.other` is returning a JSON value.\nMore explanation: Test',
           locations: [{ line: 13, column: 11 }],
         },
       ],
